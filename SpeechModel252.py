@@ -28,27 +28,27 @@ abspath = ''
 ModelName='252'
 
 class ModelSpeech(): # 语音模型类
-	def __init__(self, datapath):
-		'''
-		初始化
-		默认输出的拼音的表示大小是1424，即1423个拼音+1个空白块
-		'''
-		MS_OUTPUT_SIZE = 1424
-		self.MS_OUTPUT_SIZE = MS_OUTPUT_SIZE # 神经网络最终输出的每一个字符向量维度的大小
-		#self.BATCH_SIZE = BATCH_SIZE # 一次训练的batch
-		self.label_max_string_length = 64
-		self.AUDIO_LENGTH = 1600
-		self.AUDIO_FEATURE_LENGTH = 200
-		self._model, self.base_model = self.CreateModel() 
-		
-		self.datapath = datapath
-		self.slash = ''
-		system_type = plat.system() # 由于不同的系统的文件路径表示不一样，需要进行判断
-		if(system_type == 'Windows'):
-			self.slash='\\' # 反斜杠
-		elif(system_type == 'Linux'):
-			self.slash='/' # 正斜杠
-		else:
+    def __init__(self, datapath):
+        '''
+        初始化
+        默认输出的拼音的表示大小是1424，即1423个拼音+1个空白块
+        '''
+        MS_OUTPUT_SIZE = 1424
+        self.MS_OUTPUT_SIZE = MS_OUTPUT_SIZE # 神经网络最终输出的每一个字符向量维度的大小
+        #self.BATCH_SIZE = BATCH_SIZE # 一次训练的batch
+        self.label_max_string_length = 64
+        self.AUDIO_LENGTH = 1600
+        self.AUDIO_FEATURE_LENGTH = 200
+        self._model, self.base_model = self.CreateModel() 
+        
+        self.datapath = datapath
+        self.slash = ''
+        system_type = plat.system() # 由于不同的系统的文件路径表示不一样，需要进行判断
+        if(system_type == 'Windows'):
+            self.slash='\\' # 反斜杠
+        elif(system_type == 'Linux'):
+            self.slash='/' # 正斜杠
+    	else:
 			print('*[Message] Unknown System\n')
 			self.slash='/' # 正斜杠
 		if(self.slash != self.datapath[-1]): # 在目录路径末尾增加斜杠

@@ -16,15 +16,15 @@ modelpath = 'model_speech'
 
 system_type = plat.system() # 由于不同的系统的文件路径表示不一样，需要进行判断
 if(system_type == 'Windows'):
-	datapath = 'D:\\语音数据集'
-	modelpath = modelpath + '\\'
+    datapath = 'D:\\语音数据集'
+    modelpath = modelpath + '\\'
 elif(system_type == 'Linux'):
-	datapath = 'dataset'
-	modelpath = modelpath + '/'
+    datapath = 'dataset'
+    modelpath = modelpath + '/'
 else:
-	print('*[Message] Unknown System\n')
-	datapath = 'dataset'
-	modelpath = modelpath + '/'
+    print('*[Message] Unknown System\n')
+    datapath = 'dataset'
+    modelpath = modelpath + '/'
 
 ms = ModelSpeech(datapath)
 

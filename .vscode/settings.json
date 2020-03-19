@@ -1,0 +1,7 @@
+{
+    "python.pythonPath": "/home/xyz/miniconda3/envs/tf/bin/python",
+    "files.watcherExclude": {
+        "**/dataset/**": true
+    },
+    "editor.tabCompletion": "on"
+}
