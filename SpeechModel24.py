@@ -12,15 +12,14 @@ from general_function.file_dict import *
 from general_function.gen_func import *
 
 # LSTM_CNN
-import keras as kr
 import numpy as np
 import random
 
-from keras.models import Sequential, Model
-from keras.layers import Dense, Dropout, Input, Reshape # , Flatten,LSTM,Convolution1D,MaxPooling1D,Merge
-from keras.layers import Conv1D,LSTM,MaxPooling1D, Lambda, TimeDistributed, Activation,Conv2D, MaxPooling2D #, Merge,Conv1D
-from keras import backend as K
-from keras.optimizers import SGD, Adadelta
+from tensorflow.keras.models import Sequential, Model
+from tensorflow.keras.layers import Dense, Dropout, Input, Reshape # , Flatten,LSTM,Convolution1D,MaxPooling1D,Merge
+from tensorflow.keras.layers import Conv1D,LSTM,MaxPooling1D, Lambda, TimeDistributed, Activation,Conv2D, MaxPooling2D #, Merge,Conv1D
+from tensorflow.keras import backend as K
+from tensorflow.keras.optimizers import SGD, Adadelta
 
 from readdata24 import DataSpeech
 
@@ -362,13 +361,7 @@ class ModelSpeech(): # 语音模型类
 if(__name__=='__main__'):
     
     import tensorflow as tf
-    from keras.backend.tensorflow_backend import set_session
     os.environ["CUDA_VISIBLE_DEVICES"] = "0"
-    #进行配置，使用70%的GPU
-    config = tf.ConfigProto()
-    config.gpu_options.per_process_gpu_memory_fraction = 0.93
-    #config.gpu_options.allow_growth=True   #不全部占满显存, 按需分配
-    set_session(tf.Session(config=config))
     
     
     datapath = ''
