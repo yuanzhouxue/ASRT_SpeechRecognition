@@ -262,7 +262,7 @@ class ModelSpeech(): # 语音模型类
         
         in_len[0] = input_len
         
-        x_in = np.zeros((batch_size, 1600, self.AUDIO_FEATURE_LENGTH, 1), dtype=np.float)
+        x_in = np.zeros((batch_size, 1600, self.AUDIO_FEATURE_LENGTH), dtype=np.float)
         
         for i in range(batch_size):
             x_in[i,0:len(data_input)] = data_input
