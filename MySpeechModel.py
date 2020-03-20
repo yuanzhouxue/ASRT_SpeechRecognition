@@ -87,21 +87,23 @@ class ModelSpeech(): # 语音模型类
         layer_h3 = Dropout(0.2)(layer_h3)
         layer_h4 = GatedConv1D(200, 7)(layer_h3)
         layer_h4 = Dropout(0.2)(layer_h4)
+        layer_h5 = GatedConv1D(200, 7)(layer_h4)
+        layer_h5 = Dropout(0.2)(layer_h5)
+        layer_h6 = GatedConv1D(200, 7)(layer_h5)
+        layer_h6 = Dropout(0.2)(layer_h6)
+        layer_h7 = GatedConv1D(200, 7)(layer_h6)
+        layer_h7 = Dropout(0.2)(layer_h7)
+        layer_h8 = GatedConv1D(2000, 32)(layer_h7)
 
-        # layer_h5 = tfa.layers.WeightNormalization(layer_h1)
-        print(input_data.shape)
-        print(layer_h1.shape)
-        print(layer_h2.shape)
-        print(layer_h3.shape)
-        print(layer_h4.shape)
+        layer_h8 = Reshape((200, 8000))(layer_h8)
 
-        layer_h6 = Reshape((200, 800))(layer_h4)
-        layer_h6 = Dropout(0.4)(layer_h6)
-        layer_h7 = Dense(128, activation="relu", use_bias=True, kernel_initializer='he_normal')(layer_h6) # 全连接层
-        layer_h7 = Dropout(0.4)(layer_h7)
-        layer_h8 = Dense(self.MS_OUTPUT_SIZE, use_bias=True, kernel_initializer='he_normal')(layer_h7) # 全连接层
+        layer_h9 = Dense(1024, activation="relu", use_bias=True, kernel_initializer='he_normal')(layer_h8) # 全连接层
+        layer_h9 = Dropout(0.4)(layer_h9)
+        layer_h10 = Dense(128, activation='relu', use_bias=True, kernel_initializer='he_normal')(layer_h9)
+        layer_h10 = Dropout(0.3)(layer_h10)
+        layer_h11 = Dense(self.MS_OUTPUT_SIZE, use_bias=True, kernel_initializer='he_normal')(layer_h10) # 全连接层
         
-        y_pred = Activation('softmax', name='Activation0')(layer_h8)
+        y_pred = Activation('softmax', name='Activation0')(layer_h11)
         model_data = Model(inputs = input_data, outputs = y_pred)
         
         labels = Input(name='the_labels', shape=[self.label_max_string_length], dtype='float32')
@@ -221,7 +223,6 @@ class ModelSpeech(): # 语音模型类
                 # 数据格式出错处理 结束
                 
                 pre = self.Predict(data_input, data_input.shape[0] // 8)
-                print(pre, data_labels)
                 words_n = data_labels.shape[0] # 获取每个句子的字数
                 words_num += words_n # 把句子的总字数加上
                 edit_distance = GetEditDistance(data_labels, pre) # 获取编辑距离
