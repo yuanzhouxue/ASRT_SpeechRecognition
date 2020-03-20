@@ -155,8 +155,8 @@ class DataSpeech():
         # 获取输入特征
         # data_input = GetFrequencyFeature3(wavsignal,fs)
         data_input = getSTFTFeature(wavsignal, fs)
-        #data_input = np.array(data_input)
-        data_input = data_input.reshape(data_input.shape[0],data_input.shape[1],1)
+        data_input = np.array(data_input)
+        # data_input = data_input.reshape(data_input.shape[0],data_input.shape[1],1)
         #arr_zero = np.zeros((1, 39), dtype=np.int16) #一个全是0的行向量
         
         #while(len(data_input)<1600): #长度不够时补全到1600
@@ -185,7 +185,7 @@ class DataSpeech():
         #print(input_length,len(input_length))
         
         while True:
-            X = np.zeros((batch_size, audio_length, 200, 1), dtype = np.float)
+            X = np.zeros((batch_size, audio_length, 200), dtype = np.float)
             #y = np.zeros((batch_size, 64, self.SymbolNum), dtype=np.int16)
             y = np.zeros((batch_size, 64), dtype=np.int32)
             
