@@ -23,7 +23,7 @@ from tensorflow.keras.layers import Conv1D, MaxPooling1D, Lambda, Multiply, Acti
 from tensorflow.keras import backend as K
 from tensorflow.keras.optimizers import SGD, Adadelta
 
-from readdata24 import DataSpeech
+from readdata import DataSpeech
 
 class GatedConv1D(tf.keras.layers.Layer):
     '''GLU'''
@@ -44,10 +44,10 @@ class ModelSpeech(): # 语音模型类
         初始化
         默认输出的拼音的表示大小是1424，即1423个拼音+1个空白块
         '''
-        MS_OUTPUT_SIZE = 1424
+        MS_OUTPUT_SIZE = 219
         self.MS_OUTPUT_SIZE = MS_OUTPUT_SIZE # 神经网络最终输出的每一个字符向量维度的大小
         #self.BATCH_SIZE = BATCH_SIZE # 一次训练的batch
-        self.label_max_string_length = 64
+        self.label_max_string_length = 96
         self.AUDIO_LENGTH = 1600
         self.AUDIO_FEATURE_LENGTH = 200
         self._model, self.base_model = self.CreateModel() 
@@ -105,11 +105,9 @@ class ModelSpeech(): # 语音模型类
         layer_h7 = Dropout(0.2)(layer_h7)
         layer_h8 = GatedConv1D(2000, 32, kwargs_conv={'activation': 'relu'})(layer_h7)
 
-        layer_h8 = Reshape((200, 8000))(layer_h8)
+        layer_h8 = Reshape((800, 2000))(layer_h8)
 
-        layer_h9 = Dense(1024, activation="relu", use_bias=True, kernel_initializer='he_normal')(layer_h8) # 全连接层
-        layer_h9 = Dropout(0.4)(layer_h9)
-        layer_h10 = Dense(128, activation='relu', use_bias=True, kernel_initializer='he_normal')(layer_h9)
+        layer_h10 = Dense(128, activation='relu', use_bias=True, kernel_initializer='he_normal')(layer_h8)
         layer_h10 = Dropout(0.3)(layer_h10)
         layer_h11 = Dense(self.MS_OUTPUT_SIZE, use_bias=True, kernel_initializer='he_normal')(layer_h10) # 全连接层
         
@@ -126,7 +124,7 @@ class ModelSpeech(): # 语音模型类
         loss_out = Lambda(self.ctc_lambda_func, output_shape=(1,), name='ctc')([y_pred, labels, input_length, label_length])
         
         model = Model(inputs=[input_data, labels, input_length, label_length], outputs=loss_out)
-
+        model.summary()
         # clipnorm seems to speeds up convergence
         #sgd = SGD(lr=0.0001, decay=1e-6, momentum=0.9, nesterov=True, clipnorm=5)
         ada_d = Adadelta(lr = 0.01, rho = 0.95, epsilon = 1e-06)
