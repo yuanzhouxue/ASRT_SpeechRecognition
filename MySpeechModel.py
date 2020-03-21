@@ -79,21 +79,31 @@ class ModelSpeech(): # 语音模型类
         # 每一帧使用13维mfcc特征及其13维一阶差分和13维二阶差分表示，最大信号序列长度为1500
         input_data = Input(name='the_input', shape=(self.AUDIO_LENGTH, self.AUDIO_FEATURE_LENGTH))
 
-        layer_h1 = GatedConv1D(self.AUDIO_FEATURE_LENGTH, 48, kwargs_conv={'strides': 2}, kwargs_gate={'strides':2})(input_data)
+        layer_h1 = GatedConv1D(self.AUDIO_FEATURE_LENGTH, 48, kwargs_conv={'strides': 2, 'activation': 'relu'}, kwargs_gate={'strides':2})(input_data)
         layer_h1 = Dropout(0.2)(layer_h1)
-        layer_h2 = GatedConv1D(200, 7)(layer_h1)
+        layer_h2 = GatedConv1D(200, 7, kwargs_conv={'activation': 'relu'})(layer_h1)
         layer_h2 = Dropout(0.2)(layer_h2)
-        layer_h3 = GatedConv1D(200, 7)(layer_h2)
+        layer_h3 = GatedConv1D(200, 7, kwargs_conv={'activation': 'relu'})(layer_h2)
         layer_h3 = Dropout(0.2)(layer_h3)
-        layer_h4 = GatedConv1D(200, 7)(layer_h3)
+        layer_h4 = GatedConv1D(200, 7, kwargs_conv={'activation': 'relu'})(layer_h3)
         layer_h4 = Dropout(0.2)(layer_h4)
-        layer_h5 = GatedConv1D(200, 7)(layer_h4)
+        layer_h5 = GatedConv1D(200, 7, kwargs_conv={'activation': 'relu'})(layer_h4)
         layer_h5 = Dropout(0.2)(layer_h5)
-        layer_h6 = GatedConv1D(200, 7)(layer_h5)
+        layer_h6 = GatedConv1D(200, 7, kwargs_conv={'activation': 'relu'})(layer_h5)
         layer_h6 = Dropout(0.2)(layer_h6)
-        layer_h7 = GatedConv1D(200, 7)(layer_h6)
+        layer_h7 = GatedConv1D(200, 7, kwargs_conv={'activation': 'relu'})(layer_h6)
         layer_h7 = Dropout(0.2)(layer_h7)
-        layer_h8 = GatedConv1D(2000, 32)(layer_h7)
+        layer_h7 = GatedConv1D(200, 7, kwargs_conv={'activation': 'relu'})(layer_h7)
+        layer_h7 = Dropout(0.2)(layer_h7)
+        layer_h7 = GatedConv1D(200, 7, kwargs_conv={'activation': 'relu'})(layer_h7)
+        layer_h7 = Dropout(0.2)(layer_h7)
+        layer_h7 = GatedConv1D(200, 7, kwargs_conv={'activation': 'relu'})(layer_h7)
+        layer_h7 = Dropout(0.2)(layer_h7)
+        layer_h7 = GatedConv1D(200, 7, kwargs_conv={'activation': 'relu'})(layer_h7)
+        layer_h7 = Dropout(0.2)(layer_h7)
+        layer_h7 = GatedConv1D(200, 7, kwargs_conv={'activation': 'relu'})(layer_h7)
+        layer_h7 = Dropout(0.2)(layer_h7)
+        layer_h8 = GatedConv1D(2000, 32, kwargs_conv={'activation': 'relu'})(layer_h7)
 
         layer_h8 = Reshape((200, 8000))(layer_h8)
 
@@ -123,6 +133,7 @@ class ModelSpeech(): # 语音模型类
         
         #model.compile(loss={'ctc': lambda y_true, y_pred: y_pred}, optimizer=sgd)
         model.compile(loss={'ctc': lambda y_true, y_pred: y_pred}, optimizer = ada_d)
+        # model.compile(loss=tf.nn.ctc_loss(labels, y_pred, label_length, input_length, logits_time_major=False), optimizer = ada_d)
         # captures output of softmax so we can decode the output during visualization
         test_func = K.function([input_data], [y_pred])
         
@@ -163,6 +174,7 @@ class ModelSpeech(): # 语音模型类
                     
                     #self._model.fit_generator(yielddatas, save_step, nb_worker=2)
                     self._model.fit_generator(yielddatas, save_step)
+                    # self._model.fit()
                     n_step += 1
                 except StopIteration:
                     print('[error] generator error. please check data format.')
