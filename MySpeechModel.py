@@ -50,7 +50,7 @@ class ModelSpeech(): # 语音模型类
         self.label_max_string_length = 96
         self.AUDIO_LENGTH = 1600
         self.AUDIO_FEATURE_LENGTH = 200
-        self._model, self.base_model = self.CreateModel() 
+        self._model, self.base_model = self.CreateModel()
         
         self.datapath = datapath
         self.slash = ''
@@ -85,49 +85,22 @@ class ModelSpeech(): # 语音模型类
         net = Conv2D(32, (3, 3), activation='relu', padding='same')(net)
         net = Dropout(0.2)(net)
         net = MaxPooling2D(pool_size=(2, 2))(net)
-        net = Conv2D(32, (3, 3), activation='relu', padding='same')(net)
+        net = Conv2D(128, (3, 3), activation='relu', padding='same')(net)
         net = Dropout(0.2)(net)
-        net = MaxPooling2D(pool_size=(2, 2))(net)
-        net = Conv2D(32, (3, 3), activation='relu', padding='same')(net)
+        net = MaxPooling2D(pool_size=2)(net)
+        net = Conv2D(128, (3, 3), activation='relu', padding='same')(net)
         net = Dropout(0.2)(net)
-        net = MaxPooling2D(pool_size=(2, 2))(net)
-        net = Conv2D(32, (3, 3), activation='relu', padding='same')(net)
+        net = MaxPooling2D(pool_size=1)(net)
+        net = Conv2D(128, (3, 3), activation='relu', padding='same')(net)
         net = Dropout(0.2)(net)
-        net = MaxPooling2D(pool_size=(2, 2))(net)
-        net = Conv2D(32, (3, 3), activation='relu', padding='same')(net)
-        net = Dropout(0.2)(net)
-        net = MaxPooling2D(pool_size=(2, 2))(net)
-        net = Conv2D(32, (3, 3), activation='relu', padding='same')(net)
-        net = Dropout(0.2)(net)
-        net = MaxPooling2D(pool_size=(2, 2))(net)
+        # net = MaxPooling2D(pool_size=(2, 2))(net)
 
         # layer_h1 = GatedConv1D(self.AUDIO_FEATURE_LENGTH, 48, kwargs_conv={'strides': 2, 'activation': 'relu'}, kwargs_gate={'strides':2})(input_data)
         # layer_h1 = Dropout(0.2)(layer_h1)
         # layer_h2 = GatedConv1D(200, 7, kwargs_conv={'activation': 'relu'})(layer_h1)
         # layer_h2 = Dropout(0.2)(layer_h2)
-        # layer_h3 = GatedConv1D(200, 7, kwargs_conv={'activation': 'relu'})(layer_h2)
-        # layer_h3 = Dropout(0.2)(layer_h3)
-        # layer_h4 = GatedConv1D(200, 7, kwargs_conv={'activation': 'relu'})(layer_h3)
-        # layer_h4 = Dropout(0.2)(layer_h4)
-        # layer_h5 = GatedConv1D(200, 7, kwargs_conv={'activation': 'relu'})(layer_h4)
-        # layer_h5 = Dropout(0.2)(layer_h5)
-        # layer_h6 = GatedConv1D(200, 7, kwargs_conv={'activation': 'relu'})(layer_h5)
-        # layer_h6 = Dropout(0.2)(layer_h6)
-        # layer_h7 = GatedConv1D(200, 7, kwargs_conv={'activation': 'relu'})(layer_h6)
-        # layer_h7 = Dropout(0.2)(layer_h7)
-        # layer_h7 = GatedConv1D(200, 7, kwargs_conv={'activation': 'relu'})(layer_h7)
-        # layer_h7 = Dropout(0.2)(layer_h7)
-        # layer_h7 = GatedConv1D(200, 7, kwargs_conv={'activation': 'relu'})(layer_h7)
-        # layer_h7 = Dropout(0.2)(layer_h7)
-        # layer_h7 = GatedConv1D(200, 7, kwargs_conv={'activation': 'relu'})(layer_h7)
-        # layer_h7 = Dropout(0.2)(layer_h7)
-        # layer_h7 = GatedConv1D(200, 7, kwargs_conv={'activation': 'relu'})(layer_h7)
-        # layer_h7 = Dropout(0.2)(layer_h7)
-        # layer_h7 = GatedConv1D(200, 7, kwargs_conv={'activation': 'relu'})(layer_h7)
-        # layer_h7 = Dropout(0.2)(layer_h7)
-        # layer_h8 = GatedConv1D(2000, 32, kwargs_conv={'activation': 'relu'})(layer_h7)
         print(net.shape)
-        layer_h8 = Reshape((800, 2000))(net)
+        layer_h8 = Reshape((200, 3200))(net)
 
         layer_h10 = Dense(128, activation='relu', use_bias=True, kernel_initializer='he_normal')(layer_h8)
         layer_h10 = Dropout(0.3)(layer_h10)
@@ -295,7 +268,7 @@ class ModelSpeech(): # 语音模型类
         
         in_len[0] = input_len
         
-        x_in = np.zeros((batch_size, 1600, self.AUDIO_FEATURE_LENGTH), dtype=np.float)
+        x_in = np.zeros((batch_size, 1600, self.AUDIO_FEATURE_LENGTH, 1), dtype=np.float)
         
         for i in range(batch_size):
             x_in[i,0:len(data_input)] = data_input
@@ -420,7 +393,7 @@ if(__name__=='__main__'):
     ms = ModelSpeech(datapath)
     
     #ms.LoadModel(modelpath + 'm24/speech_model24_e_0_step_411000.model')
-    ms.TrainModel(datapath, epoch = 50, batch_size = 16, save_step = 500)
+    # ms.TrainModel(datapath, epoch = 1, batch_size = 16, save_step = 5)
     #ms.TestModel(datapath, str_dataset='test', data_count = 128, out_report = True)
     #r = ms.RecognizeSpeech_FromFile('E:\\语音数据集\\ST-CMDS-20170001_1-OS\\20170001P00241I0053.wav')
     #r = ms.RecognizeSpeech_FromFile('E:\\语音数据集\\ST-CMDS-20170001_1-OS\\20170001P00020I0087.wav')
