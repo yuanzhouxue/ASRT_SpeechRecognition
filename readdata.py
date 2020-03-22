@@ -135,8 +135,8 @@ class DataSpeech():
                 labels_of_a_wave.append(n)
 
         # 获取输入特征
-        # data_input = GetFrequencyFeature3(wavsignal,fs)
-        data_input = getSTFTFeature(wavsignal, fs)
+        data_input = GetFrequencyFeature3(wavsignal,fs)
+        # data_input = getSTFTFeature(wavsignal, fs)
         data_input = np.array(data_input)
         data_input = data_input.reshape(data_input.shape[0], data_input.shape[1], 1)
         data_label = np.array(labels_of_a_wave)

@@ -19,7 +19,7 @@ import tensorflow_addons as tfa
 import tensorflow as tf
 from tensorflow.keras.models import Sequential, Model
 # , Flatten,LSTM,Convolution1D,MaxPooling1D,Merge
-from tensorflow.keras.layers import Dense, Dropout, Input, Reshape
+from tensorflow.keras.layers import Dense, Dropout, Input, Reshape, BatchNormalization
 from tensorflow.keras.layers import Conv1D, MaxPooling1D, Lambda, Multiply, Activation, Conv2D, MaxPooling2D, ZeroPadding1D
 from tensorflow.keras import backend as K
 from tensorflow.keras.optimizers import SGD, Adadelta, Adam
@@ -86,6 +86,7 @@ class ModelSpeech():  # 语音模型类
 
         layer_h1 = Conv2D(32, (3, 3), use_bias=False, activation='relu',
                           padding='same', kernel_initializer='he_normal')(input_data)  # 卷积层
+        # layer_h1 = BatchNormalization()
         layer_h1 = Dropout(0.05)(layer_h1)
         layer_h2 = Conv2D(32, (3, 3), use_bias=True, activation='relu',
                           padding='same', kernel_initializer='he_normal')(layer_h1)  # 卷积层
@@ -181,7 +182,7 @@ class ModelSpeech():  # 语音模型类
         #y_pred = y_pred[:, 2:, :]
         return K.ctc_batch_cost(labels, y_pred, input_length, label_length)
 
-    def TrainModel(self, datapath, epoch=2, save_step=1000, batch_size=32, filename='model_speech/speech_model24'):
+    def TrainModel(self, datapath, epoch=2, save_step=1000, batch_size=32, filename='model_speech/myspeech_model'):
         '''
         训练模型
         参数：
@@ -219,14 +220,14 @@ class ModelSpeech():  # 语音模型类
                     self.datapath, str_dataset='train', data_count=4)
                 self.TestModel(self.datapath, str_dataset='dev', data_count=4)
 
-    def LoadModel(self, filename='model_speech/speech_model24.model'):
+    def LoadModel(self, filename='model_speech/myspeech_model.model'):
         '''
         加载模型参数
         '''
         self._model.load_weights(filename)
         self.base_model.load_weights(filename + '.base')
 
-    def SaveModel(self, filename='model_speech/speech_model24', comment=''):
+    def SaveModel(self, filename='model_speech/myspeech_model', comment=''):
         '''
         保存模型参数
         '''
