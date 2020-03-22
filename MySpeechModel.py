@@ -22,7 +22,7 @@ from tensorflow.keras.models import Sequential, Model
 from tensorflow.keras.layers import Dense, Dropout, Input, Reshape
 from tensorflow.keras.layers import Conv1D, MaxPooling1D, Lambda, Multiply, Activation, Conv2D, MaxPooling2D, ZeroPadding1D
 from tensorflow.keras import backend as K
-from tensorflow.keras.optimizers import SGD, Adadelta
+from tensorflow.keras.optimizers import SGD, Adadelta, Adam
 
 from readdata import DataSpeech
 
