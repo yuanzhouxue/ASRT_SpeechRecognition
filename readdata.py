@@ -138,6 +138,7 @@ class DataSpeech():
         # data_input = GetFrequencyFeature3(wavsignal,fs)
         data_input = getSTFTFeature(wavsignal, fs)
         data_input = np.array(data_input)
+        data_input = data_input.reshape(data_input.shape[0], data_input.shape[1], 1)
         data_label = np.array(labels_of_a_wave)
         return data_input, data_label
 
@@ -158,7 +159,7 @@ class DataSpeech():
         # print(input_length,len(input_length))
 
         while True:
-            X = np.zeros((batch_size, audio_length, 200), dtype=np.float)
+            X = np.zeros((batch_size, audio_length, 200, 1), dtype=np.float)
             #y = np.zeros((batch_size, 64, self.SymbolNum), dtype=np.int16)
             y = np.zeros((batch_size, self.MAX_LABEL_LEN), dtype=np.int32)
 
